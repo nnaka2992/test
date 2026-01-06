@@ -1,0 +1,15 @@
+name: test
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  detect-environment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: check github.event.release content
+        run: |
+          TARGET="${{ github.event.release.target_commitish }}"
+          echo "Release target: $TARGET"
+          echo "${{ github.event.release }}"
