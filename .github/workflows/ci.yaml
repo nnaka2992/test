@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  # ===========================================
+  # 変更されたパスを検出するジョブ
+  # ===========================================
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      backend: ${{ steps.filter.outputs.backend }}
+      docs: ${{ steps.filter.outputs.docs }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+            backend:
+              - 'backend/**'
+            docs:
+              - 'docs/**'
+
+  frontend:
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Success"
+
+  backend:
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Failed" && exit 1
+
+  docs:
+    needs: changes
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Success"
+
+  merge-gate:
+    needs: [changes, frontend, backend, docs]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check CI Status
+        run: |
+          echo "=== CI Status Summary ==="
+          echo "Frontend Test: ${{ needs.frontend-test.result }}"
+          echo "Backend Test: ${{ needs.backend-test.result }}"
+          echo "Docs Build: ${{ needs.docs-build.result }}"
+          echo "========================="
+          results="${{ needs.frontend.result }} ${{ needs.backend.result }} ${{ needs.docs.result }}"
+          if echo "$results" | grep -qE "(failure|cancelled)"; then
+            echo "CI failed!"
+            exit 1
+          fi
+          echo "CI passed!"
