@@ -53,9 +53,9 @@ jobs:
       - name: Check CI Status
         run: |
           echo "=== CI Status Summary ==="
-          echo "Frontend Test: ${{ needs.frontend-test.result }}"
-          echo "Backend Test: ${{ needs.backend-test.result }}"
-          echo "Docs Build: ${{ needs.docs-build.result }}"
+          echo "Frontend Test: ${{ needs.frontend.result }}"
+          echo "Backend Test: ${{ needs.backend.result }}"
+          echo "Docs Build: ${{ needs.docs.result }}"
           echo "========================="
           results="${{ needs.frontend.result }} ${{ needs.backend.result }} ${{ needs.docs.result }}"
           if echo "$results" | grep -qE "(failure|cancelled)"; then
