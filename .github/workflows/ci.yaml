@@ -57,7 +57,7 @@ jobs:
           echo "Backend Test: ${{ needs.backend.result }}"
           echo "Docs Build: ${{ needs.docs.result }}"
           echo "========================="
-          results="${{ needs.frontend.result }} ${{ needs.backend.result }} ${{ needs.docs.result }}"
+          results='${{ toJSON(needs.*.result) }}'
           if echo "$results" | grep -qE "(failure|cancelled)"; then
             echo "CI failed!"
             exit 1
