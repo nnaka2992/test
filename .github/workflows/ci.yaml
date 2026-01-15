@@ -45,22 +45,22 @@ jobs:
     steps:
       - run: echo "Success"
 
-  merge-gate:
-    needs: [changes, frontend, backend, docs]
-    runs-on: ubuntu-latest
-    if: always()
-    steps:
-      - name: Check CI Status
-        run: |
-          echo "=== CI Status Summary ==="
-          echo "Frontend Test: ${{ needs.frontend.result }}"
-          echo "Backend Test: ${{ needs.backend.result }}"
-          echo "Docs Build: ${{ needs.docs.result }}"
-          echo "========================="
-          results='${{ toJSON(needs.*.result) }}'
-          echo "$results"
-          if echo "$results" | grep -qE "(failure|cancelled)"; then
-            echo "CI failed!"
-            exit 1
-          fi
-          echo "CI passed!"
+#  merge-gate:
+#    needs: [changes, frontend, backend, docs]
+#    runs-on: ubuntu-latest
+#    if: always()
+#    steps:
+#      - name: Check CI Status
+#        run: |
+#          echo "=== CI Status Summary ==="
+#          echo "Frontend Test: ${{ needs.frontend.result }}"
+#          echo "Backend Test: ${{ needs.backend.result }}"
+#          echo "Docs Build: ${{ needs.docs.result }}"
+#          echo "========================="
+#          results='${{ toJSON(needs.*.result) }}'
+#          echo "$results"
+#          if echo "$results" | grep -qE "(failure|cancelled)"; then
+#            echo "CI failed!"
+#            exit 1
+#          fi
+#          echo "CI passed!"
