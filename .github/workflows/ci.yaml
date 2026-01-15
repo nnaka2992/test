@@ -58,6 +58,7 @@ jobs:
           echo "Docs Build: ${{ needs.docs.result }}"
           echo "========================="
           results='${{ toJSON(needs.*.result) }}'
+          echo "$results"
           if echo "$results" | grep -qE "(failure|cancelled)"; then
             echo "CI failed!"
             exit 1
